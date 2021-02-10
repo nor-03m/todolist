@@ -1,3 +1,3 @@
 # todolist
 
-ToDo アプリの制作
+ToDo アプリの制作を行いました
