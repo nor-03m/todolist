@@ -1,13 +1,16 @@
 <template>
     <div class="todo">
-        <div>        
-            <li><input type="text" v-model="ToDo"></li>
-            <li><input type="text" v-model="DeadLine"></li>
-            <li><v-btn type="submit" v-on:click="addToDo()">add Task</v-btn></li>
+        <div class="todolist">
+            <div><input type="text" v-model="ToDo" placeholder="task"></div>
+            <div><input type="text" v-model="DeadLine" placeholder="deadline"></div>
+            <v-btn type="submit" v-on:click="addToDo()">add Task</v-btn>
         </div>
         <div>
-            <li><v-btn type="submit" v-on:click="allToDo()">all Task</v-btn></li>
-            <li>{{ num }}</li>
+            <v-checkbox v-for="todo in AllToDo" :key="todo.todo" :label="todo.todo" color="cyan lighten-2"></v-checkbox>
+            {{ AllToDo }}
+        </div>
+        <div>
+            <v-btn type="submit" v-on:click="deleteToDo(todo.check)">delete Task</v-btn>
         </div>
     </div>
 </template>
@@ -22,8 +25,9 @@ export default {
             db: null,
             ToDo: '',
             DeadLine: '',
-            DeleteToDo: '',
+            check: false,
             num: NaN,
+            AllToDo: {}
         }
     },
 
@@ -34,8 +38,19 @@ export default {
     mounted: function(){
         var _this = this;
 
+        _this.AllToDo = []
+
         _this.db.collection('todos').get().then(snap => {
             _this.num = snap.size;
+        })
+
+         _this.db.collection('todos').get().then(function(querySnapshot){
+            querySnapshot.forEach(function(doc){
+                // doc.data() is never undefined for query doc snapshots
+                var list = doc.data();
+                console.log(doc.id, "=>", doc.data());
+                _this.AllToDo.push({todo: list.todo, deadline: list.deadline, check: list.check});
+            })
         })
     },
 
@@ -53,7 +68,8 @@ export default {
             // todos コレクションにドキュメントを追加
             _this.db.collection('todos').doc('todo' + String(_this.num)).set({
                 todo: _this.ToDo,
-                deadline: _this.DeadLine
+                deadline: _this.DeadLine,
+                check: _this.check
             }).then(function(){
                 // 追加に成功したら、ToDo、DeadLine を空にして、num を1増やす
                 _this.ToDo = '',
@@ -63,14 +79,14 @@ export default {
             })
         },
 
-        allToDo: function(){
-            this.db.collection('todos').get().then(function(querySnapshot){
-                querySnapshot.forEach(function(doc){
-                    // doc.data() is never undefined for query doc snapshots
-                    console.log(doc.id, "=>", doc.data());
-                })
-            })
-        },
+        // deleteToDo: function(){
+        //     // _this.db.collection('todos').where('check', '==', true).get().then(res => {
+        //     //     res.forEach(doc => {
+        //     //         //
+        //     //     })
+        //     // })
+        // }
+
     },
     computed: {
     },
