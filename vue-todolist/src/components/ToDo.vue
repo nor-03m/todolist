@@ -3,7 +3,7 @@
         <div class="todolist">
             <div><input type="text" v-model="ToDo" placeholder="task"></div>
             <div><input type="text" v-model="DeadLine" placeholder="deadline"></div>
-            <v-btn type="submit" v-on:click="addToDo()">add Task</v-btn>
+            <v-btn type="submit" v-on:click="addToDo(); allToDo()">add Task</v-btn>
         </div>
         <div>
             <v-checkbox v-for="todo in AllToDo" :key="todo.todo" :label="todo.todo" color="cyan lighten-2"></v-checkbox>
@@ -78,6 +78,21 @@ export default {
                 // エラー時の処理
             })
         },
+
+        allToDo: function(){
+            var _this = this
+
+            _this.AllToDo = []
+
+             _this.db.collection('todos').get().then(function(querySnapshot){
+                querySnapshot.forEach(function(doc){
+                    // doc.data() is never undefined for query doc snapshots
+                    var list = doc.data();
+                    console.log(doc.id, "=>", doc.data());
+                    _this.AllToDo.push({todo: list.todo, deadline: list.deadline, check: list.check});
+                })
+            })
+        }
 
         // deleteToDo: function(){
         //     // _this.db.collection('todos').where('check', '==', true).get().then(res => {
