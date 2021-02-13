@@ -7,7 +7,6 @@
         </div>
         <div>
             <v-checkbox v-for="todo in AllToDo" :key="todo.todo" :label="todo.todo" color="cyan lighten-2" @change="checkToDo(todo.todo)"></v-checkbox>
-            <!-- デバッグ用 -->
             {{ AllToDo }}
         </div>
         <div>
@@ -38,7 +37,7 @@ export default {
 
         // このように Vue の ライフサイクルメソッド（下の例では created）に書けば ajax が成功した時に data.json が書き換わります。
         // Vue の data は非同期で変更されても変わった時点で DOM に反映されます。
-        
+
         _this.db.collection('todos').get().then(function(querySnapshot){
             querySnapshot.forEach(function(doc){
                 var list = doc.data();
