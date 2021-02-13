@@ -43,7 +43,8 @@ export default {
         _this.db.collection('todos').get().then(snap => {
             _this.num = snap.size;
         })
-
+        
+        // ページを読み込んだ時点ですべてのタスクを表示する
          _this.db.collection('todos').get().then(function(querySnapshot){
             querySnapshot.forEach(function(doc){
                 // doc.data() is never undefined for query doc snapshots
