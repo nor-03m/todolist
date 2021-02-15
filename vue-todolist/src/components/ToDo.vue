@@ -1,16 +1,15 @@
 <template>
     <div class="todo">
+            <div><input class ="input" type="text" v-model="ToDo" placeholder="task"></div>
+            <div><input class="input" type="text" v-model="DeadLine" placeholder="deadline"></div>
+            <v-btn class="button" type="submit" v-on:click="addToDo(ToDo); allToDo()">add Task</v-btn>
         <div class="todolist">
-            <div><input type="text" v-model="ToDo" placeholder="task"></div>
-            <div><input type="text" v-model="DeadLine" placeholder="deadline"></div>
-            <v-btn type="submit" v-on:click="addToDo(ToDo); allToDo()">add Task</v-btn>
+            <p></p>
+            <v-checkbox v-for="todo in AllToDo" :key="todo.todo" :label="`${todo.todo}  :  ${todo.deadline}`" color="cyan lighten-2" @change="checkToDo(todo.todo)">
+            </v-checkbox>
         </div>
         <div>
-            <v-checkbox v-for="todo in AllToDo" :key="todo.todo" :label="todo.todo" color="cyan lighten-2" @change="checkToDo(todo.todo)"></v-checkbox>
-            {{ AllToDo }}
-        </div>
-        <div>
-            <v-btn type="submit" v-on:click="deleteToDo(); allToDo()">delete Task</v-btn>
+            <v-btn class="button" type="submit" v-on:click="deleteToDo(); allToDo()">delete Task</v-btn>
         </div>
     </div>
 </template>
@@ -88,10 +87,12 @@ export default {
 
             _this.AllToDo = []
 
-             _this.db.collection('todos').get().then(function(querySnapshot){
+             _this.db.collection('todos').orderBy('deadline').get().then(function(querySnapshot){
                 querySnapshot.forEach(function(doc){
                     var list = doc.data();
+
                     _this.AllToDo.push({todo: list.todo, deadline: list.deadline, check: list.check});
+                    
                 })
             })
         },
@@ -128,4 +129,30 @@ export default {
 </script>
 
 <style scoped>
+
+.todo{
+    text-align: center;
+    margin-top: 24px;
+}
+
+.todolist{
+    text-align: center;
+    width: 80%;
+    border: double 4px #D3D3D3;
+    border-radius: 4px;
+    margin: auto;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding: 8px;
+}
+
+.input{
+    text-align: center;
+    margin: 8px;
+}
+
+.button{
+    margin: 8px;
+}
+
 </style>
