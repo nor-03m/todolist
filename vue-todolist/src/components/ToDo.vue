@@ -15,8 +15,8 @@
         <div>
             <v-row>
                 <v-col>
-                    <v-sheet height="400">
-                        <v-calendar ref="calender" type="month" color="teal accent-1" :todos="todos">
+                    <v-sheet height="94vh">
+                        <v-calendar ref="calender" type="month" color="teal accent-1" :events="events" :event-color="getToDoColor" @change="getToDo">
                         </v-calendar>
                     </v-sheet>
                 </v-col>
@@ -42,11 +42,7 @@ export default {
             tyep: 'month',
             start: null,
             end: null,
-            todos: {
-                name: '打ち合わせ',
-                start: '2020-12-03 09:00',
-                end: '2020-12-03 12:00',
-            },
+            events: []
         }
     },
 
@@ -133,6 +129,23 @@ export default {
             _this.db.collection('todos').doc(name).update({
                 check: !_this.check
             })
+        },
+
+        getToDo: function(){
+            var _this = this
+
+            const events = [{
+                name: 'Example',
+                start: new Date('2021-02-18'),
+                end: new Date('2021-02-18'),
+                color: 'teal lighten-1',
+                }
+            ];
+            _this.events = events;
+        },
+
+        getToDoColor: function(event){
+            return event.color;
         },
 
     },
