@@ -5,6 +5,7 @@
             <v-btn class="button" type="submit" v-on:click="addToDo(ToDo); allToDo()">add Task</v-btn>
         <div class="todolist">
             <p></p>
+            <!-- <v-checkbox v-for="todo in AllToDo" :key="todo.todo" :label="`${todo.todo}  :  ${todo.deadline}`" color="teal accent-3" @change="checkToDo(todo.todo)"> -->
             <v-checkbox v-for="todo in AllToDo" :key="todo.todo" :label="`${todo.todo}  :  ${todo.deadline}`" color="teal accent-3" @change="checkToDo(todo.todo)">
             </v-checkbox>
         </div>
@@ -66,7 +67,7 @@ export default {
          _this.db.collection('todos').get().then(function(querySnapshot){
             querySnapshot.forEach(function(doc){
                 var list = doc.data();
-                _this.AllToDo.push({todo: list.todo, deadline: list.deadline, check: list.check});
+                _this.AllToDo.push({todo: list.todo, deadline: list.deadline, check: false});
             })
         })
     },
@@ -84,7 +85,7 @@ export default {
             _this.db.collection('todos').doc(name).set({
                 todo: _this.ToDo,
                 deadline: _this.DeadLine,
-                check: _this.check
+                check: false
             }).then(function(){
                 // 追加に成功したら、ToDo、DeadLine を空にする
                 _this.ToDo = '',
@@ -105,7 +106,7 @@ export default {
                 querySnapshot.forEach(function(doc){
                     var list = doc.data();
 
-                    _this.AllToDo.push({todo: list.todo, deadline: list.deadline, check: list.check});
+                    _this.AllToDo.push({todo: list.todo, deadline: list.deadline, check: false});
                     console.log(_this.AllToDo);
                 })
             })
