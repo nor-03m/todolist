@@ -5,11 +5,21 @@
             <v-btn class="button" type="submit" v-on:click="addToDo(ToDo); allToDo()">add Task</v-btn>
         <div class="todolist">
             <p></p>
-            <v-checkbox v-for="todo in AllToDo" :key="todo.todo" :label="`${todo.todo}  :  ${todo.deadline}`" color="cyan lighten-2" @change="checkToDo(todo.todo)">
+            <v-checkbox v-for="todo in AllToDo" :key="todo.todo" :label="`${todo.todo}  :  ${todo.deadline}`" color="teal accent-3" @change="checkToDo(todo.todo)">
             </v-checkbox>
         </div>
         <div>
             <v-btn class="button" type="submit" v-on:click="deleteToDo(); allToDo()">delete Task</v-btn>
+        </div>
+        <div>
+            <v-row>
+                <v-col>
+                    <v-sheet height="400">
+                        <v-calendar ref="calender" type="month" color="teal accent-1" :todos="todos">
+                        </v-calendar>
+                    </v-sheet>
+                </v-col>
+            </v-row>
         </div>
     </div>
 </template>
@@ -26,7 +36,16 @@ export default {
             DeadLine: '',
             check: false,
             num: NaN,
-            AllToDo: {}
+            AllToDo: {},
+            //
+            tyep: 'month',
+            start: null,
+            end: null,
+            todos: {
+                name: '打ち合わせ',
+                start: '2020-12-03 09:00',
+                end: '2020-12-03 12:00',
+            },
         }
     },
 
@@ -144,10 +163,17 @@ export default {
 .input{
     text-align: center;
     margin: 8px;
+    border: solid 1.2px #D3D3D3;
+    border-radius:4px;
 }
 
 .button{
     margin: 8px;
+}
+
+.col{
+    text-align: center;
+    margin: 24px;
 }
 
 </style>

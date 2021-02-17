@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <v-toolbar clas="todolist" color="lime">ToDo List</v-toolbar>
+      <v-toolbar clas="todolist" color="blue-grey darken-1">ToDo List</v-toolbar>
       <ToDo/>
     </v-main>
   </v-app>
