@@ -2,7 +2,7 @@
     <div class="todo">
             <div><input class ="input" type="text" v-model="ToDo" placeholder="task"></div>
             <div><input class="input" type="text" v-model="DeadLine" placeholder="deadline"></div>
-            <v-btn class="button" type="submit" v-on:click="addToDo(ToDo); allToDo()">add Task</v-btn>
+            <v-btn class="button" type="submit" v-on:click="addToDo(ToDo); getToDo(); allToDo()">add Task</v-btn>
         <div class="todolist">
             <p></p>
             <!-- <v-checkbox v-for="todo in AllToDo" :key="todo.todo" :label="`${todo.todo}  :  ${todo.deadline}`" color="teal accent-3" @change="checkToDo(todo.todo)"> -->
@@ -16,7 +16,7 @@
             <v-row>
                 <v-col>
                     <v-sheet height="94vh">
-                        <v-calendar ref="calender" type="month" color="teal accent-1" :events="events" :event-color="getToDoColor" @change="getToDo">
+                        <v-calendar ref="calender" type="month" color="teal accent-1" :events="events" :event-color="getToDoColor" @change="getToDo()">
                         </v-calendar>
                     </v-sheet>
                 </v-col>
@@ -39,10 +39,10 @@ export default {
             num: NaN,
             AllToDo: {},
             //
-            tyep: 'month',
+            type: 'month',
             start: null,
             end: null,
-            events: []
+            events: [],
         }
     },
 
@@ -58,12 +58,11 @@ export default {
         var _this = this;
 
         _this.AllToDo = []
-        
         // ページを読み込んだ時点ですべてのタスクを表示する
-         _this.db.collection('todos').get().then(function(querySnapshot){
+         _this.db.collection('todos').orderBy('deadline').get().then(function(querySnapshot){
             querySnapshot.forEach(function(doc){
                 var list = doc.data();
-                _this.AllToDo.push({todo: list.todo, deadline: list.deadline, check: false});
+                _this.AllToDo.push({todo: list.todo, deadline: list.deadline, check: false})
             })
         })
     },
@@ -96,16 +95,13 @@ export default {
 
             _this.AllToDo = []
 
-            console.log(_this.AllToDo);
-
              _this.db.collection('todos').orderBy('deadline').get().then(function(querySnapshot){
                 querySnapshot.forEach(function(doc){
                     var list = doc.data();
-
                     _this.AllToDo.push({todo: list.todo, deadline: list.deadline, check: false});
-                    console.log(_this.AllToDo);
                 })
             })
+
         },
 
         deleteToDo: function(){
@@ -134,14 +130,14 @@ export default {
         getToDo: function(){
             var _this = this
 
-            const events = [{
-                name: 'Example',
-                start: new Date('2021-02-18'),
-                end: new Date('2021-02-18'),
-                color: 'teal lighten-1',
-                }
-            ];
-            _this.events = events;
+            _this.events = []
+
+             _this.db.collection('todos').orderBy('deadline').get().then(function(querySnapshot){
+                querySnapshot.forEach(function(doc){
+                    var list = doc.data();
+                    _this.events.push({name: list.todo, start: new Date('2021-02-18'), end: new Date('2021-02-18'), color: 'teal lighten-1'})
+                })
+            })
         },
 
         getToDoColor: function(event){
